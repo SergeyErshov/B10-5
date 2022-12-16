@@ -14,6 +14,23 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "centos/7"
 
+  config.vm.hostname = "sf-b5-10.local"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "sf-b5-10"
+    vb.cpus = "2"
+    vb.memory = "2048"
+  end
+
+  config.vm.disk :disk, name: "SYS", size: "12GB", primary: "true"
+
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo yum update
+    sudo rpm -Uvh http://yum.pgrpms.org/reporpms/8.4/pgdg-centos-8.4-2.noarch.rpm
+    sudo yum install -y postgresql postgresql-server
+  SHELL
+
+
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
